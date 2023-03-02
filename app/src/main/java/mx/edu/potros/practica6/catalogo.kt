@@ -15,8 +15,9 @@ import android.widget.TextView
 class catalogo : AppCompatActivity() {
 
     var adapter: PeliculaAdapter? = null
+    var seriesAdapter: PeliculaAdapter? = null
     var peliculas = ArrayList<Peliculas>()
-    var gridview: GridView = findViewById(R.id.gridview)
+    var series = ArrayList<Peliculas>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,7 +26,12 @@ class catalogo : AppCompatActivity() {
         cargarPeliculas()
 
         adapter = PeliculaAdapter(this, peliculas)
-        gridview.adapter = adapter
+        seriesAdapter = PeliculaAdapter(this, series)
+        var gridPelis: GridView = findViewById(R.id.movies_catalgo)
+        var gridSeries: GridView = findViewById(R.id.mseries_catalgo)
+
+        gridPelis.adapter = adapter
+        gridSeries.adapter = seriesAdapter
     }
 
     fun cargarPeliculas() {
@@ -36,19 +42,19 @@ class catalogo : AppCompatActivity() {
         peliculas.add(Peliculas("Men in Black", R.drawable.mib, R.drawable.mibheader, "Based off of the comic book. Unbeknownst to other people, there is a private agency codenamed MiB. This agency is some kind of extraterrestrial surveillance corporation. Then, one of the agency’s finest men only going by the name “K” (Tommy Lee Jones), is recruiting for a new addition to the agency. He has chosen James Edwards (Will Smith) of the N.Y.P.D. Then, one day, a flying saucer crashes into Earth. This was an alien a part of the “Bug” race. He takes the body of a farmer (Vincent D’Onofrio) and heads to New York. He is searching for a super energy source called “The Galaxy”. Now, Agents J and K must stop the bug before it can escape with the galaxy."))
         peliculas.add(Peliculas("Toy Story", R.drawable.toystory, R.drawable.toystoryheader, "Toy Story is about the ‘secret life of toys’ when people are not around. When Buzz Lightyear, a space-ranger, takes Woody’s place as Andy’s favorite toy, Woody doesn’t like the situation and gets into a fight with Buzz. Accidentally Buzz falls out the window and Woody is accused by all the other toys of having killed him. He has to go out of the house to look for him so that they can both return to Andy’s room. But while on the outside they get into all kind of trouble while trying to get home."))
 
-        peliculas.add(Peliculas("Dr. House", R.drawable.drhouse, R.drawable.househeader, "The series follows the life of anti-social, pain killer addict, witty and arrogant medical doctor Gregory House (Hugh Laurie) with only half a muscle in his right leg. He and his team of medical doctors try to cure complex and rare diseases from very ill ordinary people in the United States of America."))
-        peliculas.add(Peliculas("Dr. Who", R.drawable.drwho, R.drawable.drwhoheader, "Traveling across time and space, the immortal time-lord known as ‘The Doctor’ travels across the universe with his many companions and his loyal shape-shifting space-ship: The TARDIS. The Doctor faces many threats across many generations: from The Daleks, The Cybermen and his time-lord adversary The Master to the sinister Davros, creator of The Daleks."))
-        peliculas.add(Peliculas("Friends", R.drawable.friends, R.drawable.friendsheader, "Rachel Green, Ross Geller, Monica Geller, Joey Tribbiani, Chandler Bing and Phoebe Buffay are six 20 something year-olds, living off of one another in the heart of New York City. Over the course of ten years, this average group of buddies goes through massive mayhem, family trouble, past and future romances, fights, laughs, tears and surprises as they learn what it really means to be a friend."))
-        peliculas.add(Peliculas("Smallville", R.drawable.smallville, R.drawable.smallvilleheader, "The numerous miraculous rescues by the local wonder boy Clark have aroused suspicions amongst colonials of Smallville. Interestingly, the boy has managed to downplay his acts of various heroic egresses in the past. They say he’s either too fast or has a penchant for finding trouble. He was found by Martha and Jonathan Kent on the day of the Meteor Shower, and subsequently adopted. Clark’s friend Lex Luthor, the only heir of Luthorcorp, has been secretly investigating grounds for Clark’s outlandish valor. However, on the face of it, Clark just seems a normal boy who’s slightly more secretive than usual."))
+        series.add(Peliculas("Dr. House", R.drawable.drhouse, R.drawable.househeader, "The series follows the life of anti-social, pain killer addict, witty and arrogant medical doctor Gregory House (Hugh Laurie) with only half a muscle in his right leg. He and his team of medical doctors try to cure complex and rare diseases from very ill ordinary people in the United States of America."))
+        series.add(Peliculas("Dr. Who", R.drawable.drwho, R.drawable.drwhoheader, "Traveling across time and space, the immortal time-lord known as ‘The Doctor’ travels across the universe with his many companions and his loyal shape-shifting space-ship: The TARDIS. The Doctor faces many threats across many generations: from The Daleks, The Cybermen and his time-lord adversary The Master to the sinister Davros, creator of The Daleks."))
+        series.add(Peliculas("Friends", R.drawable.friends, R.drawable.friendsheader, "Rachel Green, Ross Geller, Monica Geller, Joey Tribbiani, Chandler Bing and Phoebe Buffay are six 20 something year-olds, living off of one another in the heart of New York City. Over the course of ten years, this average group of buddies goes through massive mayhem, family trouble, past and future romances, fights, laughs, tears and surprises as they learn what it really means to be a friend."))
+        series.add(Peliculas("Smallville", R.drawable.smallville, R.drawable.smallvilleheader, "The numerous miraculous rescues by the local wonder boy Clark have aroused suspicions amongst colonials of Smallville. Interestingly, the boy has managed to downplay his acts of various heroic egresses in the past. They say he’s either too fast or has a penchant for finding trouble. He was found by Martha and Jonathan Kent on the day of the Meteor Shower, and subsequently adopted. Clark’s friend Lex Luthor, the only heir of Luthorcorp, has been secretly investigating grounds for Clark’s outlandish valor. However, on the face of it, Clark just seems a normal boy who’s slightly more secretive than usual."))
     }
 
     class PeliculaAdapter: BaseAdapter {
         var peliculas = ArrayList<Peliculas>()
-        var contexto: Context? = null
+        var context: Context? = null
 
         constructor(context: Context, peliculas: ArrayList<Peliculas>): super() {
             this.peliculas = peliculas
-            this.contexto = context
+            this.context = context
         }
 
         override fun getCount(): Int {
@@ -65,22 +71,21 @@ class catalogo : AppCompatActivity() {
 
         override fun getView(p0: Int, p1: View?, p2: ViewGroup?): View {
             var pelicula = peliculas[p0]
-            var inflador = LayoutInflater.from(contexto)
-            var vista = inflador.inflate(R.layout.peliculas, null)
+            var inflator = context!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+            var vista = inflator.inflate(R.layout.peliculas, null)
+            var image = vista.findViewById(R.id.image_movie_cell) as ImageView
+            var title = vista.findViewById(R.id.movie_title_cell) as TextView
 
-            var imagen = vista.findViewById(R.id.iv_pelicula) as ImageView
-            var nombre = vista.findViewById(R.id.tv_titulo) as TextView
-
-            imagen.setImageResource(pelicula.image)
-            nombre.setText(pelicula.titulo)
+            image.setImageResource(pelicula.image)
+            title.setText(pelicula.titulo)
 
             vista.setOnClickListener {
-                var intent = Intent(contexto, detalle_pelicula::class.java)
-                intent.putExtra("nombre", pelicula.titulo)
-                intent.putExtra("image", pelicula.image)
+                var intent = Intent(context, detalle_pelicula::class.java)
+                intent.putExtra("titulo", pelicula.titulo)
+                intent.putExtra("imagen", pelicula.image)
                 intent.putExtra("header", pelicula.header)
                 intent.putExtra("sinopsis", pelicula.sinopsis)
-                contexto!!.startActivity(intent)
+                context!!.startActivity(intent)
             }
 
             return vista
